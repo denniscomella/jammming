@@ -48,6 +48,7 @@ class App extends Component {
     console.log("searching for '" + term + "'");
     Spotify.search(term)
       .then(results => {
+        console.log('results: ' + results);
         this.setState({
           searchResults: results,
         })
