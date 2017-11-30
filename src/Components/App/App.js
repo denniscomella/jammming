@@ -41,7 +41,7 @@ class App extends Component {
 
   savePlaylist(){
     let trackURIs = [];
-    this.playlistTracks.forEach(track => trackURIs.push(track.uri));
+    this.state.playlistTracks.forEach(track => trackURIs.push(track.uri));
   }
 
   search(term){
