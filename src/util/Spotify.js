@@ -1,4 +1,5 @@
 import { clientID, redirectURI } from './config'
+// for security reasons, these variables are kept in a separate file. A Spotify dev account is required.
 let accessToken = '';
 
 let Spotify = {
@@ -8,7 +9,7 @@ let Spotify = {
       return accessToken;
     };
     let termString ='';
-    if (term){
+    if (term){ // term will save in the URL in the "state" to be accessed upon refresh (see SearchBar.js)
       termString = `term=${term}`
     }
 
@@ -21,7 +22,7 @@ let Spotify = {
     if (accessToken && expiresIn ){
       accessToken = accessToken[1];
       expiresIn = expiresIn[1];
-      console.log("Resetting access token.")
+      // Reset access token after timeout and clear current URL
       window.setTimeout(() => accessToken = '', expiresIn * 1000);
       window.history.pushState('Access Token', null, '/');
       return accessToken;
@@ -42,8 +43,6 @@ let Spotify = {
       // console.log(jsonResponse);
       if(jsonResponse.tracks){
         return jsonResponse.tracks.items.map(track => {
-          // console.log('track');
-          // console.log(track);
           return {
             id: track.id,
             name: track.name,
@@ -61,7 +60,7 @@ let Spotify = {
 
   // createa and save a playlist that has been created from the <Playlist />
   savePlaylist: function(playlistName, trackURIs){
-    if (!playlistName || !trackURIs){
+    if (!playlistName || !trackURIs){ // if missing info, don't bother trying
       return
     }
     this.getAccessToken();
@@ -69,27 +68,36 @@ let Spotify = {
     // retrieve the current user's userID
     const userInfoURL = 'https://api.spotify.com/v1/me';
     let userID = '';
-    userID = fetch(userInfoURL, { headers: { Authorization: `Bearer ${accessToken}`, },
+    fetch(userInfoURL, { headers: { Authorization: `Bearer ${accessToken}`, },
     }).then(response => {
       if (response.ok){
         return response.json()}
       }).then(jsonResponse => {
-      console.log(jsonResponse);
-      return jsonResponse.id});
+      // console.log(jsonResponse); // user info
+      userID = jsonResponse.id;
 
-    // create a playlist with playlistName and return its playlistID
-    let playlistCreateURL = `https://api.spotify.com/v1/users/${userID}/playlists`;
-    let playlistID = '';
-    fetch(playlistCreateURL, { method: 'POST',
-                              headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json',
-                            body: {name: playlistName, public: false, }, }, }
-                          ).then(playlist => playlistID = playlist.id);
-
-    // access the playlist by playlistID and POST new trackURIs to the endpoint
-    let addToPlaylistURL = `https://api.spotify.com/v1/users/{userID}/playlists/${playlistID}/tracks`;
-    fetch(addToPlaylistURL, { method: 'POST',
-                              headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json',
-                            body: JSON.stringify({uris: trackURIs, }), }, })
+      // still within .then()
+      // create a playlist with playlistName and return its playlistID
+      let playlistCreateURL = `https://api.spotify.com/v1/users/${userID}/playlists`;
+      let playlistID = '';
+      // console.log(accessToken);
+      fetch(playlistCreateURL, { methods: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json', },
+          body: {name: playlistName, public: false, }, },
+        ).then(response => {
+          if (response){
+            console.log(response);
+            return response.json()};
+          }).then(playlist => {
+          playlistID = playlist.id;
+          console.log(playlist);
+          // still within .then()
+          // access the playlist by playlistID and POST new trackURIs to the endpoint
+          let addToPlaylistURL = `https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`;
+          fetch(addToPlaylistURL, { methods: 'POST',
+            headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json', },
+            body: { uris: trackURIs, }, })});}); // pasta
   },
 
 };
