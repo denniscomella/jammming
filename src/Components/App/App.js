@@ -8,9 +8,11 @@ import Spotify from '../../util/Spotify';
 class App extends Component {
   constructor(props){
     super(props);
-    this.state = { searchResults: [{id: "Song", artist: "Artistimo", album: "My Favorite Album", }],
+    this.sampleSong1 = {name: "Song", artist: "Artistimo", album: "My Favorite Album", id: 'manualSong', };
+    this.sampleSong2 = {name: 'I Picked This Song', artist: "I like songs", album: "That one Album", id: 'anotherSong', }
+    this.state = { searchResults: [],
                   playlistName: "Awesome Playlist",
-                  playlistTracks: [{id: 'I Picked This Song', artist: "I like songs", album: "That one Album", }], }
+                  playlistTracks: [], }
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
@@ -42,17 +44,19 @@ class App extends Component {
   savePlaylist(){
     let trackURIs = [];
     this.state.playlistTracks.forEach(track => trackURIs.push(track.uri));
+    Spotify.savePlaylist(this.state.playlistName, trackURIs);
+    this.setState({ playlistName: 'New Playlist', playlistTracks: [], });
   }
 
   search(term){
     console.log("searching for '" + term + "'");
+    if (term){
     Spotify.search(term)
       .then(results => {
-        console.log('results: ' + results);
         this.setState({
           searchResults: results,
         })
-      })
+      })}else{this.setState({ searchResults: [this.sampleSong1], })};
   }
 
   render() {
