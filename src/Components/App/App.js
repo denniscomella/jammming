@@ -11,7 +11,7 @@ class App extends Component {
     this.sampleSong1 = {name: "Song", artist: "Artistimo", album: "My Favorite Album", id: 'manualSong', };
     this.sampleSong2 = {name: 'I Picked This Song', artist: "I like songs", album: "That one Album", id: 'anotherSong', }
     this.state = { searchResults: [],
-                  playlistName: "Awesome Playlist",
+                  playlistName: "New Playlist",
                   playlistTracks: [], }
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);

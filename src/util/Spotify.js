@@ -68,7 +68,7 @@ let Spotify = {
     // retrieve the current user's userID
     const userInfoURL = 'https://api.spotify.com/v1/me';
     let userID = '';
-    return fetch(userInfoURL, { headers: { Authorization: `Bearer ${accessToken}`, },
+    fetch(userInfoURL, { headers: { Authorization: `Bearer ${accessToken}`, },
     }).then(response => {
       if (response.ok){
         return response.json()}
@@ -81,11 +81,10 @@ let Spotify = {
       const playlistCreateURL = `https://api.spotify.com/v1/users/${userID}/playlists`;
       let playlistID = '';
       // console.log(accessToken);
-      return fetch(playlistCreateURL, { method: 'POST',
-        headers: { Authorization: `Bearer ${accessToken}`,
-        //  'Content-Type': 'application/json', 
-        },
-          body: JSON.stringify({name: playlistName, public: false, }), }
+      console.log(playlistName);
+      fetch(playlistCreateURL, { method: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json', },
+          body: JSON.stringify({name: playlistName, }), }
           ).then(response => {
           if (response){
             console.log(response);
@@ -99,7 +98,7 @@ let Spotify = {
           const addToPlaylistURL = `https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`;
           fetch(addToPlaylistURL, { method: 'POST',
             headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json', },
-            body: { uris: trackURIs, }, })});}); // pasta
+            body: JSON.stringify({ uris: trackURIs, }), })});}); // pasta
   },
 
 };
