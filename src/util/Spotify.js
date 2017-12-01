@@ -68,8 +68,8 @@ let Spotify = {
     // retrieve the current user's userID
     const userInfoURL = 'https://api.spotify.com/v1/me';
     let userID = '';
-    fetch(userInfoURL, { headers: { Authorization: `Bearer ${accessToken}`, },
-    }).then(response => {
+    return fetch(userInfoURL, JSON.stringify({ headers: { Authorization: `Bearer ${accessToken}`, },
+    })).then(response => {
       if (response.ok){
         return response.json()}
       }).then(jsonResponse => {
@@ -78,23 +78,24 @@ let Spotify = {
 
       // still within .then()
       // create a playlist with playlistName and return its playlistID
-      let playlistCreateURL = `https://api.spotify.com/v1/users/${userID}/playlists`;
+      const playlistCreateURL = `https://api.spotify.com/v1/users/${userID}/playlists`;
       let playlistID = '';
       // console.log(accessToken);
-      fetch(playlistCreateURL, { methods: 'POST',
+      return fetch(playlistCreateURL, JSON.stringify({ methods: 'POST',
         headers: { Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json', },
-          body: {name: playlistName, public: false, }, },
-        ).then(response => {
-          if (response){
+          body: {name: playlistName, public: false, }, },)
+          ).then(response => {
+          if (response.ok){
             console.log(response);
             return response.json()};
           }).then(playlist => {
           playlistID = playlist.id;
           console.log(playlist);
+
           // still within .then()
           // access the playlist by playlistID and POST new trackURIs to the endpoint
-          let addToPlaylistURL = `https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`;
+          const addToPlaylistURL = `https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`;
           fetch(addToPlaylistURL, { methods: 'POST',
             headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json', },
             body: { uris: trackURIs, }, })});}); // pasta
