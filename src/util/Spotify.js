@@ -81,7 +81,7 @@ let Spotify = {
       const playlistCreateURL = `https://api.spotify.com/v1/users/${userID}/playlists`;
       let playlistID = '';
       // console.log(accessToken);
-      return fetch(playlistCreateURL, { methods: 'POST',
+      return fetch(playlistCreateURL, { method: 'POST',
         headers: { Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json', },
           body: JSON.stringify({name: playlistName, public: false, }), },
@@ -96,7 +96,7 @@ let Spotify = {
           // still within .then()
           // access the playlist by playlistID and POST new trackURIs to the endpoint
           const addToPlaylistURL = `https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`;
-          fetch(addToPlaylistURL, { methods: 'POST',
+          fetch(addToPlaylistURL, { method: 'POST',
             headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json', },
             body: { uris: trackURIs, }, })});}); // pasta
   },
