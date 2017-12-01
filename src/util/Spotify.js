@@ -68,12 +68,12 @@ let Spotify = {
     // retrieve the current user's userID
     const userInfoURL = 'https://api.spotify.com/v1/me';
     let userID = '';
-    fetch(userInfoURL, { headers: { Authorization: `Bearer ${accessToken}`, },
+    return fetch(userInfoURL, { headers: { Authorization: `Bearer ${accessToken}`, },
     }).then(response => {
       if (response.ok){
         return response.json()}
       }).then(jsonResponse => {
-      // console.log(jsonResponse); // user info
+      console.log(jsonResponse); // user info
       userID = jsonResponse.id;
 
       // still within .then()
@@ -81,9 +81,10 @@ let Spotify = {
       const playlistCreateURL = `https://api.spotify.com/v1/users/${userID}/playlists`;
       let playlistID = '';
       // console.log(accessToken);
-      fetch(playlistCreateURL, { method: 'POST',
+      return fetch(playlistCreateURL, { method: 'POST',
         headers: { Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json', },
+        //  'Content-Type': 'application/json', 
+        },
           body: JSON.stringify({name: playlistName, public: false, }), }
           ).then(response => {
           if (response){
