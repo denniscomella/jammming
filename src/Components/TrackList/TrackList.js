@@ -3,12 +3,6 @@ import './TrackList.css';
 import Track from '../Track/Track';
 
 class TrackList extends Component {
-  constructor(props){
-    super(props)
-    const nothing = 'This is not a useless constructor.'
-    nothing.split(' ');
-  }
-
   render() {
     let tracks = this.props.tracks.map(track => {
       // track is an object

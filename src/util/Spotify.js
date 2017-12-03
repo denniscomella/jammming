@@ -53,6 +53,9 @@ let Spotify = {
         });
       }
         console.log("Ain't no tracks.");
+        if (term){
+          alert("No tracks were found!")
+        }
         return [];
       }
     )
@@ -73,7 +76,7 @@ let Spotify = {
       if (response.ok){
         return response.json()}
       }).then(jsonResponse => {
-      console.log(jsonResponse); // user info
+      // console.log(jsonResponse); // user info
       userID = jsonResponse.id;
 
       // still within .then()
@@ -81,17 +84,16 @@ let Spotify = {
       const playlistCreateURL = `https://api.spotify.com/v1/users/${userID}/playlists`;
       let playlistID = '';
       // console.log(accessToken);
-      console.log(playlistName);
       fetch(playlistCreateURL, { method: 'POST',
         headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json', },
           body: JSON.stringify({name: playlistName, }), }
           ).then(response => {
           if (response){
-            console.log(response);
             return response.json()};
           }).then(playlist => {
+          // console.log(playlist); // playlist default data
           playlistID = playlist.id;
-          console.log(playlist);
+
 
           // still within .then()
           // access the playlist by playlistID and POST new trackURIs to the endpoint
